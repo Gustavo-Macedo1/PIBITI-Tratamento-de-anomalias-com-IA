@@ -31,22 +31,25 @@ Os pontuadores de anomalias do Darts serão listados abaixo:
 
 2. **Negative Log-likelihood (NLL) Scorers**
    Os NLL Scorers formam um conjunto de pontuadores que utilizam distribuições de probabilidades clássicas para gerar **predições estocásticas** para cada janela W da série temporal. Em seguida, o modelo calcula o NLL ao comparar a previsão estocástica com os valores reais da distribuição para cada janela W. A pontuação resultante é o próprio NLL.
-   O Darts disponibiliza as seguintes distribuições de probabilidades: exponencial, Cauchy, Gamma, Gaussiana, Laplace, Poisson.
+   O Darts disponibiliza as seguintes distribuições de probabilidades: exponencial, Cauchy, Gamma, Gaussiana, Laplace e Poisson.
 
 3. **Norm Scorer**
    O Norm Scorer atua comparando duas séries temporais (uma predição e uma série temporal real, por exemplo). O modelo gera vetores para cada ponto das séries e calcula, como resultado, a norma [2] de ordem n (a ordem 1 implica a distância de Manhattan, a ordem 2 implica a distância euclidiana, etc). Assim, o Norm Scorer exibe predições determinísticas.     
    Quanto maior o valor da norma entre as séries, maior a pontuação de anomalia deste modelo.
 
+4. **Wasserstein Scorer**
+   O Wasserstein Scorer é um pontuador que utiliza a distância de mínimo esforço de Wasserstein para calcular a diferença entre duas distribuições de probabilidades, obtendo **predições determinísticas**. Assim, o modelo divide as duas séries temporais comparadas em janelas de tamanho W e compara as distribuições de probabilidades em cada janela.
+   Quanto maior a distância de Wasserstein entre as janelas, maior a pontuação resultante. 
 
 
-### Detectores de Outliers
 
-Detectors provide binary anomaly classification on time series. They can typically be used to transform anomaly scores time series into binary anomaly time series.
+### Detectores de Anomalias
 
-Some detectors are trainable. For instance, QuantileDetector emits a binary anomaly for every time step where the observed value(s) are beyond the quantile(s) observed on the training series.
+Os detectores de anomalias fazem classificações binárias nas séries temporais. Tipicamente, são usados para transformar séries temporias de pontuações de anomalias em séries temporais binárias de anomalias.
 
-The main functions are fit() (for the trainable detectors), detect() and eval_metric().
+Alguns detectores são treináveis, como o QuantileDetector.
 
-fit() trains the detector over the history of one or multiple time series. It can for instance be called on series containing anomaly scores (or even raw values) during normal times. 
-The function detect() takes an anomaly score time series as input, and applies the detector to obtain binary predictions. The function eval_metric() returns the accuracy metric (“accuracy”, “precision”, “recall” or “f1”) 
-between a binary prediction time series and some known binary ground truth time series indicating the presence of anomalies.
+O princípio de funcionamento dos detectores está baseado no treinamento em uma ou várias séries temporais. Em seguida, o modelo é alimentado com uma série temporal de pontuações de anomalias e faz uso do detector para gerar a série temporal binária de anomalias.
+Também é possível obter métricas de desempenho (como acurácia, precisão, recall, ou f1) em relação a uma predição binária e uma série temporal conhecida com a presença de anomalias, configurando uma interação supervisionada.
+
+Os detectores de anomalias do Darts serão listados abaixo:
