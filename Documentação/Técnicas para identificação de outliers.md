@@ -29,12 +29,12 @@ Os pontuadores de anomalias do Darts serão listados abaixo:
    O K-Means Scorer é um pontuador que utiliza a técnica K-Means Clustering [1], responsável por treinar em uma série temporal e separar os dados pontuais em K clusters com base na similaridade entre tais dados, que pode ser calculada utilizando algoritmos como a distância euclidiana quadrática ou métodos similares.
     A pontuação é feita calculando a distância do mais próximo entre os K centroides em relação à janela W. Este pontuador gera **predições determinísticas**, ou seja, gera predições replicáveis que se alinham a ambientes controlados.
 
-2. **Negative Log-likelihood (NLL) Scorers**
+2. **Negative Log-likelihood (NLL) Scorers (exponencial, Cauchy, Gamma, Gaussiana, Laplace e Poisson)**
    Os NLL Scorers formam um conjunto de pontuadores que utilizam distribuições de probabilidades clássicas para gerar **predições estocásticas** para cada janela W da série temporal. Em seguida, o modelo calcula o NLL ao comparar a previsão estocástica com os valores reais da distribuição para cada janela W. A pontuação resultante é o próprio NLL.
    O Darts disponibiliza as seguintes distribuições de probabilidades: exponencial, Cauchy, Gamma, Gaussiana, Laplace e Poisson.
 
 3. **Norm Scorer**
-   O Norm Scorer atua comparando duas séries temporais (uma predição e uma série temporal real, por exemplo). O modelo gera vetores para cada ponto das séries e calcula, como resultado, a norma [2] de ordem n (a ordem 1 implica a distância de Manhattan, a ordem 2 implica a distância euclidiana, etc). Assim, o Norm Scorer exibe predições determinísticas.     
+   O Norm Scorer atua comparando duas séries temporais (uma predição e uma série temporal real, por exemplo). O modelo gera vetores para cada ponto das séries e calcula, como resultado, a norma [2] de ordem n (a ordem 1 implica a distância de Manhattan, a ordem 2 implica a distância euclidiana, etc). Assim, o Norm Scorer exibe **predições determinísticas**.  
    Quanto maior o valor da norma entre as séries, maior a pontuação de anomalia deste modelo.
 
 4. **Wasserstein Scorer**
@@ -47,9 +47,18 @@ Os pontuadores de anomalias do Darts serão listados abaixo:
 
 Os detectores de anomalias fazem classificações binárias nas séries temporais. Tipicamente, são usados para transformar séries temporias de pontuações de anomalias em séries temporais binárias de anomalias.
 
-Alguns detectores são treináveis, como o QuantileDetector.
+Alguns detectores são treináveis, como o Quantile Detector.
 
 O princípio de funcionamento dos detectores está baseado no treinamento em uma ou várias séries temporais. Em seguida, o modelo é alimentado com uma série temporal de pontuações de anomalias e faz uso do detector para gerar a série temporal binária de anomalias.
 Também é possível obter métricas de desempenho (como acurácia, precisão, recall, ou f1) em relação a uma predição binária e uma série temporal conhecida com a presença de anomalias, configurando uma interação supervisionada.
 
 Os detectores de anomalias do Darts serão listados abaixo:
+
+1. **Quantile Detector**
+   O Quantile Detector utiliza uma série temporal de pontuações de anomalias em conjunto com quantis percentuais definidos. Em sua metodologia, o modelo sinaliza como anomalias os pontos em que as pontuações superam o quantil percentual superior
+   e/ou os pontos em que a pontuação é menor que o quantil percentual inferior.
+
+2. **Threshold Detector**
+   O Threshold Detector também utiliza uma série temporal de pontuações de anomalias. Porém, diferentemente do Quantile Detector, não há utilização de quantis percentuais, e sim de limiares absolutos. Para classificar os pontos de uma série como anomalias, o Threshold Detector sinaliza como anomalias
+   os pontos em que as pontuações de anomalias superam o limiar absoluto superior e/ou os pontos em que as pontuações de anomalias são menores que o limiar absoluto inferior. Dessa forma, para que os valores dos limiares absolutos sejam contundentes,
+   é fundamental que a escala da série temporal de pontuações de anomalias seja conhecida.
