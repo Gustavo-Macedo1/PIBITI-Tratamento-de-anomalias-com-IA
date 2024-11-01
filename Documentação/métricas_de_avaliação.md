@@ -43,10 +43,29 @@ A tabela abaixo identifica as fórmulas para algumas das métricas acima:
 
 |Método  | 	Fórmula|
 |---   |   ---|
-|Sensibilidade   |   VP / (VP+FN)|
+|Recall   |   VP / (VP+FN)|
 |Especificidade   |   VN / (FP+VN)|
 |Acurácia   |   (VP+VN) / N|
 |Precisão   |   VP / (VP+FP)|
-|F-score    |   2 x (PxS) / (P+S)|
+|F-score    |   2 x (Precisão x Recall) / (Precisão + Recall)|
   
 </div>
+
+<br>
+
+Considerando a natureza dos dados hidrológicos fluviométricos e a tarefa de identificação de outliers, as métricas ideais para o problema devem ter como objetivo minimizar
+a quantidade de falsos negativos (em maior peso) e falsos positivos (em menor peso), enquanto lida com dados desbalanceados. Portanto, **as métricas escolhidas, em ordem de relevância, foram: Recall, AUC PR e F1 Score.** <br>
+
+O Recall é uma métrica que penaliza explicitamente a presença de falsos negativos e não é muito afetada por dados desbalanceados. Já as métricas AUC PR e F1 Score são bastante adequadas ao se considerar o equilíbrio entre a relevância dos falsos negativos (FN) e falsos positivos(FP). Dessa forma, o presente estudo propõe a utilização das três métricas combinadas, com pesos adequados à relevância de cada métrica.
+
+Assim, a métrica de avaliação final do modelo, denotada por Avaliação Ponderada (AP), pode ser calculada segundo a seguinte formulação:
+
+<div align="center">
+ 
+$AP = \frac{5 x Recall + 2,5 * (AUC PR + F1 Score)}{10}$
+
+</div>
+
+### **Conclusão:**
+
+Com base na análise das características dos dados hidrológicos e da tarefa de identificação de outliers, o presente estudo propõe uma abordagem de Avaliação Ponderada (AP) que prioriza a minimização de falsos negativos, dado o impacto negativo que eles podem gerar na qualidade dos dados corrigidos. A métrica de **Recall** foi escolhida como prioridade devido à sua sensibilidade em capturar verdadeiros positivos, essencial para evitar falsos negativos. As métricas **AUC PR** e **F1 Score** complementam essa avaliação ao equilibrar a importância de minimizar tanto falsos negativos quanto falsos positivos, sem que o desbalanceamento dos dados prejudique a análise. A fórmula de **Avaliação Ponderada (AP)** apresentada reflete a relevância de cada métrica e serve como uma medida abrangente para comparação dos modelos, de forma a identificar aquele com o melhor desempenho na detecção de outliers para dados hidrológicos.
